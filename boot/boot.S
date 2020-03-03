@@ -13,6 +13,9 @@
 start:
   .code16                     # Assemble for 16-bit mode
   cli                         # Disable interrupts
+                              # copyright:bios has loaded interrupt 
+                              # descriptor table ,so boot loader can
+                              # use cli
   cld                         # String operations increment
 
   # Set up the important data segment registers (DS, ES, SS).
@@ -45,7 +48,8 @@ seta20.2:
   # and segment translation that makes virtual addresses 
   # identical to their physical addresses, so that the 
   # effective memory map does not change during the switch.
-  lgdt    gdtdesc
+  lgdt    gdtdesc                 # copyright: change core's level 
+                                  # change special register
   movl    %cr0, %eax
   orl     $CR0_PE_ON, %eax
   movl    %eax, %cr0

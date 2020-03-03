@@ -192,7 +192,7 @@ cga_putc(int c)
 	}
 
 	// What is the purpose of this?
-	if (crt_pos >= CRT_SIZE) {
+	if (crt_pos >= CRT_SIZE) {//size : entire momery  cols: row momery
 		int i;
 
 		memmove(crt_buf, crt_buf + CRT_COLS, (CRT_SIZE - CRT_COLS) * sizeof(uint16_t));
