@@ -183,7 +183,6 @@ trap_dispatch(struct Trapframe *tf)
 	// Handle processor exceptions.
 	// LAB 3: Your code here.
 
-<<<<<<< HEAD
 	// Handle spurious interrupts
 	// The hardware sometimes raises these because of noise on the
 	// IRQ line or other reasons. We don't care.
@@ -204,7 +203,6 @@ trap_dispatch(struct Trapframe *tf)
 	else {
 		env_destroy(curenv);
 		return;
-=======
 	/*
 	if(tf->tf_trapno == T_PGFLT){
 		page_fault_handler(tf);
@@ -237,7 +235,6 @@ trap_dispatch(struct Trapframe *tf)
 			env_destroy(curenv);
 			return;
 		}
->>>>>>> lab3
 	}
 
 	// Unexpected trap: The user process or the kernel has a bug.
