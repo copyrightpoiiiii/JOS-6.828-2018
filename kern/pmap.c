@@ -266,7 +266,7 @@ page_init(void)
 	// NB: DO NOT actually touch the physical memory corresponding to
 	// free pages!
 	size_t i;
-	pages[0].pp_ref = 0;
+	pages[0].pp_ref = 1;
 	pages[0].pp_link = NULL;
 	for (i = 1; i < npages_basemem; i++) {
 		pages[i].pp_ref = 0;
