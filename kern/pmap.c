@@ -279,7 +279,10 @@ mem_init_mp(void)
 	//     Permissions: kernel RW, user NONE
 	//
 	// LAB 4: Your code here:
-
+	for(int i=0;i<NCPU;i++){
+		int kstacktop_i = KSTACKTOP - i * (KSTKSIZE + KSTKGAP);
+		boot_map_region(kern_pgdir,kstacktop_i - KSTKSIZE,KSTKSIZE,PADDR(&percpu_kstacks[i]),PTE_W);
+	}
 }
 
 // --------------------------------------------------------------
@@ -318,18 +321,20 @@ page_init(void)
 	// Change the code to reflect this.
 	// NB: DO NOT actually touch the physical memory corresponding to
 	// free pages!
-	size_t i,useSize;
-	extern unsigned char mpentry_start[],mpentry_end[];
-	useSize = ROUNDUP(mpentry_end-mpentry_start,PGSIZE);
-	pages[0].pp_ref = 0;
+	//size_t i,useSize;
+	/*pages[0].pp_ref = 1;
 	pages[0].pp_link = NULL;
 	for (i = 1; i < MPENTRY_PADDR/PGSIZE; i++) {
 		pages[i].pp_ref = 0;
 		pages[i].pp_link = page_free_list;
 		page_free_list = &pages[i];
 	}
-	for(; i < (MPENTRY_PADDR+useSize)/PGSIZE; i++)
+	extern unsigned char mpentry_start[],mpentry_end[];
+	useSize = ROUNDUP(mpentry_end-mpentry_start,PGSIZE);
+	for(; i < (MPENTRY_PADDR+useSize)/PGSIZE; i++){
 		pages[i].pp_ref=1;
+		pages[i].pp_link=NULL;
+	}
 	for(; i < npages_basemem; i++) {
 		pages[i].pp_ref = 0;
 		pages[i].pp_link = page_free_list;
@@ -344,6 +349,42 @@ page_init(void)
 		pages[i].pp_ref = 0;
 		pages[i].pp_link = page_free_list;
 		page_free_list = &pages[i];
+	}*/
+	size_t i;
+	for (i = 0; i < npages; i++) {
+		if(i == 0)
+			{	pages[i].pp_ref = 1;
+				pages[i].pp_link = NULL;
+			}
+		else if(i == MPENTRY_PADDR/PGSIZE){
+				pages[i].pp_ref = 1;
+				pages[i].pp_link = NULL;
+		}
+		else if(i>=1 && i<npages_basemem)
+		{
+			pages[i].pp_ref = 0;
+			pages[i].pp_link = page_free_list; 
+			page_free_list = &pages[i];
+		}
+		else if(i>=IOPHYSMEM/PGSIZE && i< EXTPHYSMEM/PGSIZE )
+		{
+			pages[i].pp_ref = 1;
+			pages[i].pp_link = NULL;
+		}
+	
+		else if( i >= EXTPHYSMEM / PGSIZE && 
+				i < ( (int)(boot_alloc(0)) - KERNBASE)/PGSIZE)
+		{
+			pages[i].pp_ref = 1;
+			pages[i].pp_link =NULL;
+		}
+		else
+		{
+			pages[i].pp_ref = 0;
+			pages[i].pp_link = page_free_list;
+			page_free_list = &pages[i];
+		}
+
 	}
 }
 
@@ -615,9 +656,10 @@ mmio_map_region(physaddr_t pa, size_t size)
 	//
 	// Your code here:
 	size = ROUNDUP(size, PGSIZE);
+	void *test = (void *)base;
 	boot_map_region(kern_pgdir,base,size,pa,PTE_W|PTE_PCD|PTE_PWT );
 	base+=size;
-	return (void *)(base - size);
+	return test;
 }
 
 static uintptr_t user_mem_check_addr;

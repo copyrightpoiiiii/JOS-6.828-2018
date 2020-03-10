@@ -30,6 +30,17 @@ sched_yield(void)
 
 	// LAB 4: Your code here.
 
+	struct Env * now = thiscpu->cpu_env;
+	int32_t nowId = 0;
+	if(now)
+		nowId = ENVX(now->env_id);
+	for(int i = 0 , y = (nowId + i)%NENV; i < NENV ; i++,y = (nowId + i)%NENV)
+		if(envs[y].env_status == ENV_RUNNABLE){
+			env_run(&envs[y]);
+			return ;
+		}
+	if(envs[nowId].env_cpunum == cpunum() && envs[nowId].env_status == ENV_RUNNING)
+		env_run(&envs[nowId]);
 	// sched_halt never returns
 	sched_halt();
 }

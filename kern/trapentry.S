@@ -78,6 +78,12 @@ TRAPHANDLER(align_entry, T_ALIGN, 1, 0);
 TRAPHANDLER(mchk_entry, T_MCHK, 0, 0);
 TRAPHANDLER(simderr_entry, T_SIMDERR, 0, 0);
 TRAPHANDLER(syscall_entry, T_SYSCALL, 0, 1);
+TRAPHANDLER(timer_entry, IRQ_OFFSET+IRQ_TIMER, 0, 0);
+TRAPHANDLER(kbd_entry, IRQ_OFFSET+IRQ_KBD, 0, 0);
+TRAPHANDLER(serial_entry, IRQ_OFFSET+IRQ_SERIAL, 0, 0);
+TRAPHANDLER(spurious_entry, IRQ_OFFSET+IRQ_SPURIOUS, 0, 0);
+TRAPHANDLER(ide_entry, IRQ_OFFSET+IRQ_IDE, 0, 0);
+TRAPHANDLER(errir_entry, IRQ_OFFSET+IRQ_ERROR, 0, 0);
 .data
         .long 0, 0, 0 
 
