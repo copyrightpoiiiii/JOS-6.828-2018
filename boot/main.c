@@ -44,6 +44,7 @@ bootmain(void)
 	// read 1st page off disk
 	readseg((uint32_t) ELFHDR, SECTSIZE*8, 0);
 
+	// copyright: BIOS will find a bootable disk
 	// is this a valid ELF?
 	if (ELFHDR->e_magic != ELF_MAGIC)
 		goto bad;
