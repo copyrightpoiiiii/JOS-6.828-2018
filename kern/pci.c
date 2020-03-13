@@ -16,6 +16,8 @@ static uint32_t pci_conf1_data_ioport = 0x0cfc;
 // Forward declarations
 static int pci_bridge_attach(struct pci_func *pcif);
 
+int pci_e1000_attach(struct pci_func * pcif);
+
 // PCI driver table
 struct pci_driver {
 	uint32_t key1, key2;
@@ -31,7 +33,7 @@ struct pci_driver pci_attach_class[] = {
 // pci_attach_vendor matches the vendor ID and device ID of a PCI device. key1
 // and key2 should be the vendor ID and device ID respectively
 struct pci_driver pci_attach_vendor[] = {
-	{PCI_E1000_VENDOR_ID,PCI_E1000_DEVICE_ID,&pci_e1000_attach},
+	{PCI_E1000_VENDER_ID,PCI_E1000_DEVICE_ID,&pci_e1000_attach},
 	{ 0, 0, 0 },
 };
 
